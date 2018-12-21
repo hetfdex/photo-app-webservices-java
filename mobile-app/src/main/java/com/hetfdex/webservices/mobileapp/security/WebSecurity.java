@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.hetfdex.webservices.mobileapp.service.UserService;
@@ -22,7 +23,26 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll().anyRequest().authenticated().and().addFilter(getAuthenticationFilter());
+		http
+        .cors().and()
+        .csrf().disable().authorizeRequests()
+        .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+        .permitAll()
+        //.antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
+        //.permitAll()
+        //.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
+        //.permitAll()
+        //.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
+        //.permitAll()
+        //.antMatchers(SecurityConstants.H2_CONSOLE)
+        //.permitAll()
+        .anyRequest().authenticated().and()
+        .addFilter(getAuthenticationFilter())
+        .addFilter(new AuthorizationFilter(authenticationManager()))
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		//http.headers().frameOptions().disable();
 	}
 	
 	@Override

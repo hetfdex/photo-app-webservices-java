@@ -1,6 +1,5 @@
 package com.hetfdex.webservices.mobileapp.security;
 
-import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
