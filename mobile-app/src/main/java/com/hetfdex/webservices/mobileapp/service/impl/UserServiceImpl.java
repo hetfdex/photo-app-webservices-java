@@ -1,16 +1,29 @@
 package com.hetfdex.webservices.mobileapp.service.impl;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hetfdex.webservices.mobileapp.UserRepository;
 import com.hetfdex.webservices.mobileapp.io.entity.UserEntity;
 import com.hetfdex.webservices.mobileapp.service.UserService;
+import com.hetfdex.webservices.mobileapp.shared.Utils;
 import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 
 @Service
 public class UserServiceImpl implements UserService {
+	@Autowired
+	Utils utils;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -20,8 +33,8 @@ public class UserServiceImpl implements UserService {
 		
 		BeanUtils.copyProperties(user, userEntity);
 		
-		userEntity.setUserID("test-userid");
-		userEntity.setEncryptedPassword("test-password");
+		userEntity.setUserID(utils.generateUserID(64));
+		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		
 		UserEntity savedUser = userRepository.save(userEntity);
 		
@@ -30,5 +43,15 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(savedUser, result);
 		
 		return result;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		UserEntity userEntity = userRepository.findByEmail(email);
+		
+		if(userEntity == null)
+			throw new UsernameNotFoundException(email);
+		
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 }
