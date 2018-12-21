@@ -1,5 +1,6 @@
 package com.hetfdex.webservices.mobileapp.security;
 
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hetfdex.webservices.mobileapp.SpringApplicationContext;
+import com.hetfdex.webservices.mobileapp.service.UserService;
+import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 import com.hetfdex.webservices.mobileapp.ui.controller.ui.model.request.UserLoginRequestModel;
 
 import io.jsonwebtoken.Jwts;
@@ -48,6 +52,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 		
 		String token = Jwts.builder().setSubject(username).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET).compact();
 		
-		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+		UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
+		
+        UserDTO userDTO = userService.getUser(username);
+        
+        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        response.addHeader("UserID", userDTO.getUserID());
 	}	
 }

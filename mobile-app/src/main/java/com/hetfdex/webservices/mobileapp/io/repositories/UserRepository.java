@@ -1,4 +1,4 @@
-package com.hetfdex.webservices.mobileapp;
+package com.hetfdex.webservices.mobileapp.io.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
