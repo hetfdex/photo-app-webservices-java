@@ -24,7 +24,7 @@ public class MobileAppApplication {
 		return new SpringApplicationContext();
 	}
 	
-	@Bean(name="appProperties")
+	@Bean(name="AppProperties")
 	public AppProperties getAppProperties() {
 		return new AppProperties();
 	}
