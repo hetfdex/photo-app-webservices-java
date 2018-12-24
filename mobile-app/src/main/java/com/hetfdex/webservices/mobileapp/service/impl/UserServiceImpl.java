@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO getUserByEmail(String email) {
+	public UserDTO getUserByEmail(String email) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findByEmail(email);
 
 		if (userEntity == null)
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO getUserByUserID(String id) {
+	public UserDTO getUserByUserID(String id) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findByUserID(id);
 
 		if (userEntity == null)
