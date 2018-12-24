@@ -49,7 +49,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 		
 		Date expirationDate = new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME);
 		
-		String token = Jwts.builder().setSubject(username).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET).compact();
+		String token = Jwts.builder().setSubject(username).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
 		
 		UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
 		

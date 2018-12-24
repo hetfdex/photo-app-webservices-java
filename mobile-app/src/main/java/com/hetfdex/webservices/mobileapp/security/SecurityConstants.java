@@ -1,10 +1,17 @@
 package com.hetfdex.webservices.mobileapp.security;
 
+import com.hetfdex.webservices.mobileapp.SpringApplicationContext;
+
 public class SecurityConstants {
 	public static final long EXPIRATION_TIME = 864000000;
 	
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final String HEADER_STRING = "Authorization";
 	public static final String SIGN_UP_URL = "/users";
-	public static final String TOKEN_SECRET = "fnwAp2F5iHE2GMkr";
+	
+	public static String getTokenSecret() {
+		AppProperties appProperties = (AppProperties)SpringApplicationContext.getBean("appProperties");
+		
+		return appProperties.GetTokenSecret();
+	}
 }
