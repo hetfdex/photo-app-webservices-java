@@ -21,38 +21,38 @@ import com.hetfdex.webservices.mobileapp.ui.controller.ui.model.response.UserRes
 public class UserController {
 	@Autowired
 	UserService userService;
-	
-	@GetMapping(path="/{id}")
+
+	@GetMapping(path = "/{id}")
 	public UserRest getUser(@PathVariable String id) {
 		UserRest result = new UserRest();
-		
+
 		UserDTO userDTO = userService.getUserByUserID(id);
-		
+
 		BeanUtils.copyProperties(userDTO, result);
-		
+
 		return result;
 	}
-	
+
 	@PostMapping
 	public UserRest postUser(@RequestBody UserDetailsRequestModel userDetails) {
 		UserRest result = new UserRest();
-		
+
 		UserDTO userDTO = new UserDTO();
-		
+
 		BeanUtils.copyProperties(userDetails, userDTO);
-		
+
 		UserDTO createdUser = userService.createUser(userDTO);
-		
+
 		BeanUtils.copyProperties(createdUser, result);
-		
+
 		return result;
 	}
-	
+
 	@PutMapping
 	public String putUser() {
 		return "putUser";
 	}
-	
+
 	@DeleteMapping
 	public String deleteUser() {
 		return "deleteUser";

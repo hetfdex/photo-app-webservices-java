@@ -2,11 +2,11 @@ package com.hetfdex.webservices.mobileapp.shared.dto;
 
 import java.io.Serializable;
 
-public class UserDTO implements Serializable{
+public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 6469131503599387382L;
 
 	private long id;
-	
+
 	private String userID;
 	private String firstName;
 	private String lastName;
@@ -14,7 +14,7 @@ public class UserDTO implements Serializable{
 	private String password;
 	private String encryptedPassword;
 	private String emailVerificationToken;
-	
+
 	private Boolean emailVerificationStatus = false;
 
 	public long getId() {

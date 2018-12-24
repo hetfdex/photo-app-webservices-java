@@ -20,66 +20,66 @@ import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	Utils utils;
-	
+
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Override
 	public UserDTO createUser(UserDTO user) {
 		UserEntity userEntity = new UserEntity();
-		
+
 		BeanUtils.copyProperties(user, userEntity);
-		
+
 		userEntity.setUserID(utils.generateUserID(64));
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		
+
 		UserEntity savedUser = userRepository.save(userEntity);
-		
+
 		UserDTO result = new UserDTO();
-		
+
 		BeanUtils.copyProperties(savedUser, result);
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public UserDTO getUserByEmail(String email) {
 		UserEntity userEntity = userRepository.findByEmail(email);
-		
-		if(userEntity == null)
+
+		if (userEntity == null)
 			throw new UsernameNotFoundException(email);
-		
+
 		UserDTO result = new UserDTO();
-		
+
 		BeanUtils.copyProperties(userEntity, result);
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public UserDTO getUserByUserID(String id) {
 		UserEntity userEntity = userRepository.findByUserID(id);
-		
-		if(userEntity == null)
+
+		if (userEntity == null)
 			throw new UsernameNotFoundException(id);
-		
+
 		UserDTO result = new UserDTO();
-		
+
 		BeanUtils.copyProperties(userEntity, result);
-		
+
 		return result;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findByEmail(email);
-		
-		if(userEntity == null)
+
+		if (userEntity == null)
 			throw new UsernameNotFoundException(email);
-		
+
 		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 }

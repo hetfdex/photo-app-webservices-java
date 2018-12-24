@@ -13,20 +13,19 @@ public class MobileAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MobileAppApplication.class, args);
 	}
-	
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	public SpringApplicationContext springApplicationContext() {
 		return new SpringApplicationContext();
 	}
-	
-	@Bean(name="AppProperties")
+
+	@Bean(name = "AppProperties")
 	public AppProperties getAppProperties() {
 		return new AppProperties();
 	}
 }
-
