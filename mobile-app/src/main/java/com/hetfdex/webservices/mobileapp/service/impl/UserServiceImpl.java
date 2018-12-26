@@ -2,6 +2,7 @@ package com.hetfdex.webservices.mobileapp.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,11 @@ import org.springframework.stereotype.Service;
 import com.hetfdex.webservices.mobileapp.io.entity.UserEntity;
 import com.hetfdex.webservices.mobileapp.io.repositories.UserRepository;
 import com.hetfdex.webservices.mobileapp.service.UserService;
-import com.hetfdex.webservices.mobileapp.shared.Utils;
 import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 import com.hetfdex.webservices.mobileapp.ui.controller.ui.model.response.ErrorMessages;
 
 @Service
 public class UserServiceImpl implements UserService {
-	@Autowired
-	Utils utils;
-
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -38,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 		BeanUtils.copyProperties(user, userEntity);
 
-		userEntity.setUserID(utils.generateUserID(64));
+		userEntity.setUserID(UUID.randomUUID().toString());
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		UserEntity savedUser = userRepository.save(userEntity);
@@ -98,7 +95,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDTO> getUsers(int page, int limit) {
 		List<UserDTO> results = new ArrayList<>();
-		
+
 		if (page > 0) {
 			page -= 1;
 		}
