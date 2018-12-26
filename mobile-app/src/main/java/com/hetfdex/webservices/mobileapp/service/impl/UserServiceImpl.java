@@ -1,9 +1,13 @@
 package com.hetfdex.webservices.mobileapp.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -78,17 +82,41 @@ public class UserServiceImpl implements UserService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public boolean deleteUser(String id) {
 		UserEntity userEntity = userRepository.findByUserID(id);
 
 		if (userEntity == null)
 			throw new UsernameNotFoundException(ErrorMessages.RECORD_NOT_FOUND.getErrorMessage());
-		
+
 		userRepository.delete(userEntity);
-		
+
 		return true;
+	}
+
+	@Override
+	public List<UserDTO> getUsers(int page, int limit) {
+		List<UserDTO> results = new ArrayList<>();
+		
+		if (page > 0) {
+			page -= 1;
+		}
+
+		Pageable pageableRequest = PageRequest.of(page, limit);
+
+		Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+
+		List<UserEntity> users = usersPage.getContent();
+
+		for (UserEntity user : users) {
+			UserDTO result = new UserDTO();
+
+			BeanUtils.copyProperties(user, result);
+
+			results.add(result);
+		}
+		return results;
 	}
 
 	@Override
