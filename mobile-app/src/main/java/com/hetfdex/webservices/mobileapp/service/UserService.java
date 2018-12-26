@@ -7,6 +7,10 @@ import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 public interface UserService extends UserDetailsService {
 	UserDTO createUser(UserDTO user);
 
+	UserDTO updateUser(String id, UserDTO user);
+	
+	boolean deleteUser(String id);
+
 	UserDTO getUserByEmail(String email);
 
 	UserDTO getUserByUserID(String id);

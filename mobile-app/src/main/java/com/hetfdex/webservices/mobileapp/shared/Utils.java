@@ -11,10 +11,7 @@ public class Utils {
 
 	private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-	public String generateUserID(int length) throws Exception {
-		if (length < 4)
-			throw new Exception("UserID length must be at least 4");
-
+	public String generateUserID(int length) {
 		return generateRandomString(length);
 	}
 
