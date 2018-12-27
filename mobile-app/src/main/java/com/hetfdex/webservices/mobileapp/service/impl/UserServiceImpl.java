@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.hetfdex.webservices.mobileapp.io.entity.UserEntity;
 import com.hetfdex.webservices.mobileapp.io.repositories.UserRepository;
 import com.hetfdex.webservices.mobileapp.service.UserService;
+import com.hetfdex.webservices.mobileapp.shared.dto.AddressDTO;
 import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
 import com.hetfdex.webservices.mobileapp.ui.controller.ui.model.response.ErrorMessages;
 
@@ -31,18 +33,25 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO createUser(UserDTO user) {
-		UserEntity userEntity = new UserEntity();
-
-		BeanUtils.copyProperties(user, userEntity);
+		ModelMapper modelMapper = new ModelMapper();
+		
+		for (int i = 0; i < user.getAddresses().size(); i++) {
+			AddressDTO address = user.getAddresses().get(i);
+			
+			address.setUserDTO(user);
+			address.setAddressID(UUID.randomUUID().toString());
+			
+			user.getAddresses().set(i, address);
+		}
+		
+		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 
 		userEntity.setUserID(UUID.randomUUID().toString());
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		UserEntity savedUser = userRepository.save(userEntity);
 
-		UserDTO result = new UserDTO();
-
-		BeanUtils.copyProperties(savedUser, result);
+		UserDTO result = modelMapper.map(savedUser, UserDTO.class);
 
 		return result;
 	}
@@ -69,13 +78,15 @@ public class UserServiceImpl implements UserService {
 		}
 
 		UserDTO result = new UserDTO();
+		
+		ModelMapper modelMapper = new ModelMapper();
 
 		if (save) {
 			UserEntity savedUser = userRepository.save(userEntity);
-
-			BeanUtils.copyProperties(savedUser, result);
+			
+			result = modelMapper.map(savedUser, UserDTO.class);
 		} else {
-			BeanUtils.copyProperties(userEntity, result);
+			result = modelMapper.map(userEntity, UserDTO.class);
 		}
 		return result;
 	}

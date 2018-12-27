@@ -3,6 +3,7 @@ package com.hetfdex.webservices.mobileapp.ui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,13 +53,13 @@ public class UserController {
 
 		UserRest result = new UserRest();
 
-		UserDTO userDTO = new UserDTO();
+		ModelMapper modelMapper = new ModelMapper();
 
-		BeanUtils.copyProperties(userDetails, userDTO);
+		UserDTO userDTO = modelMapper.map(userDetails, UserDTO.class);
 
 		UserDTO createdUser = userService.createUser(userDTO);
 
-		BeanUtils.copyProperties(createdUser, result);
+		result = modelMapper.map(createdUser, UserRest.class);
 
 		return result;
 	}
@@ -69,13 +70,13 @@ public class UserController {
 	public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
 		UserRest result = new UserRest();
 
-		UserDTO userDTO = new UserDTO();
+		ModelMapper modelMapper = new ModelMapper();
 
-		BeanUtils.copyProperties(userDetails, userDTO);
+		UserDTO userDTO = modelMapper.map(userDetails, UserDTO.class);
 
 		UserDTO updatedUser = userService.updateUser(id, userDTO);
 
-		BeanUtils.copyProperties(updatedUser, result);
+		result = modelMapper.map(updatedUser, UserRest.class);
 
 		return result;
 	}
