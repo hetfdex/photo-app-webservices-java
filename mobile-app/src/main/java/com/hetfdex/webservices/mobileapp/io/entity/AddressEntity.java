@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.hetfdex.webservices.mobileapp.shared.dto.UserDTO;
-
 @Entity(name = "addresses")
 public class AddressEntity implements Serializable {
 	private static final long serialVersionUID = 7374971455814333679L;
@@ -36,7 +34,7 @@ public class AddressEntity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "users_id")
-	private UserDTO userDTO;
+	private UserEntity userEntity;
 
 	public long getId() {
 		return id;
@@ -86,11 +84,11 @@ public class AddressEntity implements Serializable {
 		this.postCode = postCode;
 	}
 
-	public UserDTO getUserDTO() {
-		return userDTO;
+	public UserEntity getUserEntity() {
+		return userEntity;
 	}
 
-	public void setUserDTO(UserDTO userDTO) {
-		this.userDTO = userDTO;
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
 }
